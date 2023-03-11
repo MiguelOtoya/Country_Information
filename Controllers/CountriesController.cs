@@ -37,8 +37,40 @@ namespace Country_Information.Controllers
             catch (Exception ex)
             {
                  return BadRequest(ex.Message);
-         }
-}
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var country = await _context.Countries.FindAsync(id);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            _context.Countries.Remove(country);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Country country)
+        {
+            if (id != country.id)
+            {
+                return BadRequest();
+            }
+
+            _context.Update(country);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+
         
     }
 }
